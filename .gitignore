@@ -1,3 +1,8 @@
-.vscode/
-x64/
-*vcxproj*
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!*.cpp
+!*.h
+!README.md
