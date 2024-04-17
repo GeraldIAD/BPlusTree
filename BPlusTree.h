@@ -36,18 +36,26 @@ struct Node{
 template<typename Key, typename Value>	// 键值
 class BPlusTree {
 private:
-	// 插入非满节点
-	//void insertNotFull(Node<Key,Value>* node, Key k, Value val);
-	// 分裂节点
-	void split(Node<Key,Value>* node);
 	Node<Key,Value>* root;
+	// 递归分裂索引节点，直到根节点
+	void split(Node<Key,Value>* node);
+	// 递归调整索引节点
+	void adjust(Node<Key,Value>* node);
+	// 层次遍历显示B+树
 	void show(Node<Key,Value>* node, int level);
+	// 释放内存
 	void free(Node<Key,Value>* node);
 public:
+	Node<Key,Value>* getRoot();
 	BPlusTree();
 	~BPlusTree();
+	// 插入键值对
 	void insert(Key k, Value val);
+	// 删除键
+	void remove(Key k);
+	// 外部调用，显示B+树
 	void show();
+	
 };
 
 #endif
