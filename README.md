@@ -1,7 +1,7 @@
 # A simple B+ tree implemented using C++
 ## 项目说明
 - 个人项目开源地址：https://github.com/GeraldIAD/BPlusTree
-- 参考文献：[解密B树与B+树：构建稳定可扩展的数据结构 - 知乎 (zhihu.com)]([https://zhuanlan.zhihu.com/p/666310408])
+- 参考文献：[解密B树与B+树：构建稳定可扩展的数据结构 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/666310408)
 - [在线B+树生成](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
 - B+树的定义参考维基百科，“m阶B+树”最多有m-1个索引和m个儿子指针。
 - 采用模板类，可以自定义键值对，演示时采用int类型key，string类型value。
