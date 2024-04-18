@@ -25,11 +25,14 @@ struct Node{
 	Node* parent;	//	指向父亲
 	Node* nxt;	//	叶子节点有效，指向下一个叶子
 	Node* prev;	//	叶子节点有效，指向上一个叶子
-	Node(){
+	Node(){	
 		leaf = false;
 		parent = NULL;
 		nxt = NULL;
 		prev = NULL;
+		indices.clear();
+		children.clear();
+		values.clear();
 	}
 };
 
@@ -53,9 +56,10 @@ public:
 	void insert(Key k, Value val);
 	// 删除键
 	void remove(Key k);
+	// 查找键
+	Value search(Key k);
 	// 外部调用，显示B+树
 	void show();
-	
 };
 
 #endif

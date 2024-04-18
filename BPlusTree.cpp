@@ -188,17 +188,20 @@ void BPlusTree<Key, Value>::remove(Key k){
         // 否则直接返回
         return;
     }
+    
 
     Node<Key, Value>* parent = cur->parent;
     Node<Key, Value>* left = cur->prev;
     Node<Key, Value>* right = cur->nxt;
+        
+
     // 如果删除后叶子节点的元素个数小于MIN_IND，需要调整
     if(cur->indices.size() < MIN_IND){
-        printf("叶子节点元素个数小于MIN_IND，需要调整\n");
+        cout<<"叶子节点元素个数小于MIN_IND，需要调整"<<endl;
 
         // 从左兄弟节点借
         if (left != NULL && left->indices.size() > MIN_IND){
-            printf("从左兄弟节点借\n");
+            cout<<"从左兄弟节点借"<<endl;
             // 从左兄弟节点借一个元素
             Key borrow_key = left->indices[left->indices.size()-1];
             Value borrow_val = left->values[left->values.size()-1];
@@ -216,7 +219,7 @@ void BPlusTree<Key, Value>::remove(Key k){
 
         // 从右兄弟节点借
         else if (right != NULL && right->indices.size() > MIN_IND){
-            printf("从右兄弟节点借\n");
+            cout<<"从右兄弟节点借"<<endl;
             // 从右兄弟节点借一个元素
             Key borrow_key = right->indices[0];
             Value borrow_val = right->values[0];
@@ -234,11 +237,11 @@ void BPlusTree<Key, Value>::remove(Key k){
 
         // 左右兄弟节点都不能借，只能合并
         else {
-            printf("叶子的左右兄弟节点都不能借，只能合并\n");
+            cout<<"左右兄弟节点都不能借，只能合并"<<endl;
             // 合并与自己在同一个父节点下的左右兄弟节点，优先合并左兄弟节点
             if (left!=NULL && left->parent == cur->parent)
             {
-                printf("合并左兄弟叶子节点\n");
+                cout<<"合并左兄弟叶子节点"<<endl;
                 // 当前节点的索引值插入到左兄弟节点的末尾
                 left->indices.insert(left->indices.end(), cur->indices.begin(), cur->indices.end());
                 left->values.insert(left->values.end(), cur->values.begin(), cur->values.end());
@@ -255,7 +258,8 @@ void BPlusTree<Key, Value>::remove(Key k){
             }
             // 合并右兄弟节点
             else if (right!=NULL && right->parent == cur->parent)
-            {   printf("合并右兄弟叶子节点\n");
+            {   
+                cout<<"合并右兄弟叶子节点"<<endl;
                 // 右兄弟节点的索引值插入到当前节点的末尾
                 cur->indices.insert(cur->indices.end(), right->indices.begin(), right->indices.end());
                 cur->values.insert(cur->values.end(), right->values.begin(), right->values.end());
@@ -273,7 +277,7 @@ void BPlusTree<Key, Value>::remove(Key k){
     }
     // 如果父节点（此时必然是索引节点）的元素个数小于MIN_IND，需要调整
     if(parent->indices.size() < MIN_IND){
-        printf("叶子的父节点元素个数小于MIN_IND，为 %d 个，需要调整\n", parent->indices.size());
+        cout<<"叶子的父节点元素个数小于MIN_IND，为 "<<parent->indices.size()<<" 个，需要调整"<<endl;
         adjust(parent);
     }
 }
@@ -365,9 +369,7 @@ void BPlusTree<Key, Value>::adjust(Node<Key, Value>* node){
             new_node->indices.insert(new_node->indices.end(), left->indices.begin(), left->indices.end());
             new_node->indices.push_back(parent_key);
             new_node->indices.insert(new_node->indices.end(), node->indices.begin(), node->indices.end());
-//            for (int j=0;j<new_node->indices.size();j++)
-//                cout<<new_node->indices[j]<<" ";
-//            cout<<endl;
+
             new_node->children.insert(new_node->children.end(), left->children.begin(), left->children.end());
             new_node->children.insert(new_node->children.end(), node->children.begin(), node->children.end());
             new_node->parent = parent;
@@ -511,4 +513,31 @@ void BPlusTree<Key, Value>::show(Node<Key, Value>* node, int depth){
     }
     cout<<endl<<endl;
     cout<<"--------------------------------"<<endl;
+}
+
+// 查找键
+template<typename Key, typename Value>
+Value BPlusTree<Key, Value>::search(Key k){
+    cout<<"search key: "<<k<<endl;
+    // 根节点为空，直接返回
+    if(root == NULL) {
+        printf("树空，无法查找键\n");
+        return Value();
+    }
+    // 针对叶子结点，根据key找到叶子节点，查找记录
+    Node<Key, Value>* cur = root;
+    while(!cur->leaf){  // 找到要查找的叶子节点cur
+        int i = 0;
+        while(i < cur->indices.size() && k > cur->indices[i]) i++;
+        cur = cur->children[i];
+    }
+    // 在叶子节点中查找
+    int i = 0;
+    while(i < cur->indices.size() && k > cur->indices[i]) i++;
+    if(i == cur->indices.size() || cur->indices[i] != k) {
+        cout<<"没有找到要查找的键 k: "<<k<<endl;
+        return Value();
+    }
+    cout<<"找到键 k: "<<k<<" 对应的值为: "<<cur->values[i]<<endl;
+    return cur->values[i];
 }
