@@ -32,7 +32,7 @@
     M --> H
 ```
 - remove
-```mermaid:
+```mermaid
 graph TD
 A[开始] --> B[根节点为空]
 B -->|是| C[打印'树空，无法删除键'，结束]
